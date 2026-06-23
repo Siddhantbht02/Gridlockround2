@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter
 from pydantic import BaseModel
 import httpx
@@ -8,6 +9,10 @@ from .bangalore_stations import POLICE_STATIONS, HOSPITALS, FIRE_STATIONS
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
+
+OSRM_URL = os.getenv("OSRM_URL", "http://router.project-osrm.org/route/v1/driving/")
+if not OSRM_URL.endswith("/"):
+    OSRM_URL += "/"
 
 
 class AllocationRequest(BaseModel):
@@ -40,7 +45,7 @@ def get_osrm_route(start_lng: float, start_lat: float, end_lng: float, end_lat: 
     Falls back to a straight line if the request fails.
     """
     url = (
-        f"http://router.project-osrm.org/route/v1/driving/"
+        f"{OSRM_URL}"
         f"{start_lng},{start_lat};{end_lng},{end_lat}"
         f"?overview=full&geometries=geojson"
     )

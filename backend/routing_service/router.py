@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter
 from pydantic import BaseModel
 import httpx
@@ -8,6 +9,10 @@ from typing import Optional, List
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
+
+OSRM_URL = os.getenv("OSRM_URL", "http://router.project-osrm.org/route/v1/driving/")
+if not OSRM_URL.endswith("/"):
+    OSRM_URL += "/"
 
 
 class IncidentRouteRequest(BaseModel):
@@ -129,7 +134,7 @@ def get_diversion_route(req: IncidentRouteRequest):
     # on real road topology so they are already the true shortest alternatives.
     try:
         alt_url = (
-            f"http://router.project-osrm.org/route/v1/driving/"
+            f"{OSRM_URL}"
             f"{start_lng},{start_lat};{end_lng},{end_lat}"
             f"?overview=full&geometries=geojson&alternatives=3"
         )
@@ -182,7 +187,7 @@ def get_diversion_route(req: IncidentRouteRequest):
 
                 try:
                     url = (
-                        f"http://router.project-osrm.org/route/v1/driving/"
+                        f"{OSRM_URL}"
                         f"{start_lng},{start_lat};{wp_lng},{wp_lat};{end_lng},{end_lat}"
                         f"?overview=full&geometries=geojson"
                     )

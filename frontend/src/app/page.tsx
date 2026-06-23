@@ -4,7 +4,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import MapView from '../components/MapView';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://gridlockround2-i3um.onrender.com/api';
 
 /* ─── Tiny inline SVG icons (no lucide dep needed for custom icons) ─── */
 const IconShield = () => (
@@ -695,7 +695,7 @@ export default function Dashboard() {
                   <div className="gl-animate-in gl-animate-in-delay-4" style={{ marginTop: 20 }}>
                     <SectionLabel icon={<IconRoute />}>Alternate Detour Routes</SectionLabel>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                      {simulationResult.detour_routes.map((rt, i) => (
+                      {simulationResult.detour_routes.map((rt: any, i: number) => (
                         <div
                           key={rt.id}
                           style={{
@@ -858,8 +858,8 @@ export default function Dashboard() {
           incidents={incidents}
           selectedIncident={null}
           onSelectIncident={(i: any) => console.log('Selected', i)}
-          stations={stations}
-          selectedLocations={selectedLocations}
+          stations={stations as any}
+          selectedLocations={selectedLocations as any}
           incidentShape={incidentShape}
           onMapClick={(lat: number, lng: number) => {
             setFormData((prev) => ({
