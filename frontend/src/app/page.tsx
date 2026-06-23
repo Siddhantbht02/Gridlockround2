@@ -404,7 +404,7 @@ export default function Dashboard() {
             <div className="gl-logo-icon">
               <IconShield />
             </div>
-            <span className="gl-app-name">GridLock</span>
+            <span className="gl-app-name">GridGuardian</span>
           </div>
           <p className="gl-app-subtitle">Traffic Intelligence Platform</p>
         </div>

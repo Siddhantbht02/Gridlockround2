@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "GridLock — Traffic Intelligence Platform",
+  title: "GridGuardian — Traffic Intelligence Platform",
   description: "Predictive Congestion Management for Bangalore. Real-time incident simulation, AI-powered resource allocation, and smart routing.",
   keywords: ["traffic management", "AI prediction", "congestion", "Bangalore", "incident response"],
 };
