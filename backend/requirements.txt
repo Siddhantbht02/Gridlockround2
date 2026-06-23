@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+sqlalchemy
+geoalchemy2
+pydantic
+pydantic-settings
+python-dotenv
+redis
+httpx
+psycopg2-binary
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
+xgboost
+scikit-learn
+pandas
+joblib

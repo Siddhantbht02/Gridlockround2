@@ -1,0 +1,23 @@
+# Virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node.js
+node_modules/
+.next/
+out/
+.env.local
+npm-debug.log*
+
+# SQLite Database
+*.db
+*.db-journal
+
+# Editor / System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
