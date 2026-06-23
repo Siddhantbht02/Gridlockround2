@@ -695,6 +695,7 @@ export default function Dashboard() {
                   <div className="gl-animate-in gl-animate-in-delay-4" style={{ marginTop: 20 }}>
                     <SectionLabel icon={<IconRoute />}>Alternate Detour Routes</SectionLabel>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      {/* Explicitly typed rt and i to resolve Vercel TypeScript build error */}
                       {simulationResult.detour_routes.map((rt: any, i: number) => (
                         <div
                           key={rt.id}
