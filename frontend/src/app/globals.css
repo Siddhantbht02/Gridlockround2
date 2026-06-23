@@ -1098,3 +1098,193 @@ svg {
   background: var(--border-subtle);
   margin: 4px 0;
 }
+
+/* ─── Landing Page Styles ────────────────────────────── */
+.gl-landing-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: radial-gradient(circle at center, #0B0F19 0%, #030712 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.8s ease;
+  overflow: hidden;
+}
+
+.gl-landing-overlay.slide-up-out {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Glowing grid lines */
+.gl-landing-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center;
+  transform: perspective(500px) rotateX(60deg) translateY(-30%) translateZ(0);
+  animation: gridScroll 20s linear infinite;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+@keyframes gridScroll {
+  from { background-position: 0 0; }
+  to { background-position: 0 500px; }
+}
+
+/* Glowing Radar / Surveillance animation */
+.gl-landing-radar {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  border: 1px dashed rgba(6, 182, 212, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  animation: rotateRadar 30s linear infinite;
+}
+
+.gl-landing-radar::before {
+  content: '';
+  position: absolute;
+  inset: 50px;
+  border-radius: 50%;
+  border: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+.gl-landing-radar::after {
+  content: '';
+  position: absolute;
+  inset: 150px;
+  border-radius: 50%;
+  border: 2px dotted rgba(6, 182, 212, 0.08);
+}
+
+@keyframes rotateRadar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Center Content */
+.gl-landing-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.gl-landing-badge {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(16, 185, 129, 0.1); }
+  50% { box-shadow: 0 0 16px rgba(16, 185, 129, 0.3); }
+}
+
+.gl-landing-title {
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.25));
+  margin: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.gl-landing-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Swipe to Unlock Slider */
+.gl-swiper-container {
+  margin-top: 50px;
+  position: relative;
+  width: 320px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-medium);
+  border-radius: 30px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  user-select: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.gl-swiper-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.4) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  animation: shineText 2.5s infinite linear;
+}
+
+@keyframes shineText {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.gl-swiper-handle {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  cursor: grab;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  z-index: 2;
+}
+
+.gl-swiper-handle:active {
+  cursor: grabbing;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.6), 0 0 12px rgba(6, 182, 212, 0.4);
+}
+
+.gl-swiper-handle-icon {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -2px;
+}

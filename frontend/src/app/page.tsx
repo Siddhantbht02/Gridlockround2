@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import MapView from '../components/MapView';
 import axios from 'axios';
 
@@ -195,6 +195,72 @@ export default function Dashboard() {
   const [simulationMode, setSimulationMode] = useState<'single' | 'multiple'>('single');
   const [incidentShape, setIncidentShape] = useState<'point' | 'route'>('point');
   const { sidebarRef, rootRef, handleRef, onMouseDown } = useSidebarResize(380);
+
+  // Swipe to unlock landing page state and gestures
+  const [landingState, setLandingState] = useState<'visible' | 'animating' | 'hidden'>('visible');
+  const [swiperX, setSwiperX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const swiperStartRef = useRef(0);
+  const maxSwipe = 260; // 320px track - 8px padding - 52px handle = 260px max drag
+
+  const handleDragStart = (clientX: number) => {
+    setIsDragging(true);
+    swiperStartRef.current = clientX - swiperX;
+  };
+
+  const handleDragMove = useCallback((clientX: number) => {
+    if (!isDragging) return;
+    const newX = Math.max(0, Math.min(maxSwipe, clientX - swiperStartRef.current));
+    setSwiperX(newX);
+
+    if (newX >= maxSwipe - 5) {
+      setIsDragging(false);
+      setLandingState('animating');
+      setTimeout(() => {
+        setLandingState('hidden');
+      }, 800);
+    }
+  }, [isDragging]);
+
+  const handleDragEnd = useCallback(() => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    if (swiperX < maxSwipe - 5) {
+      let currentX = swiperX;
+      const step = () => {
+        if (currentX > 0) {
+          currentX = Math.max(0, currentX - 25);
+          setSwiperX(currentX);
+          requestAnimationFrame(step);
+        }
+      };
+      requestAnimationFrame(step);
+    }
+  }, [isDragging, swiperX]);
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => handleDragMove(e.clientX);
+    const onMouseUp = () => handleDragEnd();
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches && e.touches[0]) {
+        handleDragMove(e.touches[0].clientX);
+      }
+    };
+    const onTouchEnd = () => handleDragEnd();
+
+    if (isDragging) {
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener('touchmove', onTouchMove);
+      window.addEventListener('touchend', onTouchEnd);
+    }
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [isDragging, handleDragMove, handleDragEnd]);
 
   const handleShapeChange = (shape: 'point' | 'route') => {
     setIncidentShape(shape);
@@ -395,7 +461,35 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="gl-root" ref={rootRef}>
+    <>
+      {landingState !== 'hidden' && (
+        <div className={`gl-landing-overlay ${landingState === 'animating' ? 'slide-up-out' : ''}`}>
+          <div className="gl-landing-grid" />
+          <div className="gl-landing-radar" />
+          
+          <div className="gl-landing-content">
+            <div className="gl-landing-badge">Operational Status: Active</div>
+            <h1 className="gl-landing-title">GridGuardian</h1>
+            <p className="gl-landing-subtitle">
+              Predictive Traffic Intelligence & Dynamic Incident Management Platform for Smart Cities.
+            </p>
+
+            <div className="gl-swiper-container">
+              <div className="gl-swiper-text">Swipe to open dashboard</div>
+              <div
+                className="gl-swiper-handle"
+                style={{ transform: `translateX(${swiperX}px)` }}
+                onMouseDown={(e) => handleDragStart(e.clientX)}
+                onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
+              >
+                <div className="gl-swiper-handle-icon">≫</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="gl-root" ref={rootRef}>
       {/* ── Sidebar ── */}
       <aside className="gl-sidebar" ref={sidebarRef} style={{ width: 380 }}>
         {/* Header */}
@@ -883,5 +977,6 @@ export default function Dashboard() {
         />
       </main>
     </div>
+    </>
   );
 }
